@@ -57,7 +57,7 @@ const TaskFilterComponent: React.FC<TaskFilterComponentProps> = ({ onFilterChang
           <select
             value={status}
             onChange={(e) => setStatus(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-black p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Statuses</option>
             <option value="pending">Pending</option>
@@ -73,7 +73,7 @@ const TaskFilterComponent: React.FC<TaskFilterComponentProps> = ({ onFilterChang
           <select
             value={priority}
             onChange={(e) => setPriority(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-black p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All Priorities</option>
             <option value="low">Low</option>
@@ -87,7 +87,7 @@ const TaskFilterComponent: React.FC<TaskFilterComponentProps> = ({ onFilterChang
           <select
             value={completed}
             onChange={(e) => setCompleted(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-black p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All</option>
             <option value="true">Yes</option>
@@ -101,7 +101,7 @@ const TaskFilterComponent: React.FC<TaskFilterComponentProps> = ({ onFilterChang
             type="date"
             value={dueDateStart}
             onChange={(e) => setDueDateStart(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-black p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -111,7 +111,7 @@ const TaskFilterComponent: React.FC<TaskFilterComponentProps> = ({ onFilterChang
             type="date"
             value={dueDateEnd}
             onChange={(e) => setDueDateEnd(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-black p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -122,7 +122,7 @@ const TaskFilterComponent: React.FC<TaskFilterComponentProps> = ({ onFilterChang
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="Enter tags (comma-separated)"
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-black p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
 
@@ -131,7 +131,7 @@ const TaskFilterComponent: React.FC<TaskFilterComponentProps> = ({ onFilterChang
           <select
             value={hasRecurrence}
             onChange={(e) => setHasRecurrence(e.target.value)}
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-black p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           >
             <option value="">All</option>
             <option value="true">Yes</option>
@@ -146,7 +146,7 @@ const TaskFilterComponent: React.FC<TaskFilterComponentProps> = ({ onFilterChang
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Search tasks..."
-            className="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+            className="w-full text-black p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
           />
         </div>
       </div>

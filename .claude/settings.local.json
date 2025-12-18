@@ -21,7 +21,8 @@
       "Bash(mkdir -p frontend/src/components frontend/src/types frontend/src/lib frontend/src/contexts frontend/src/app)",
       "Bash(python -m src.utils.validate_consistency)",
       "Bash(python -m pytest ../tests/e2e/test_consistency_e2e.py::test_sc_001_no_type_conversion_errors -v)",
-      "Bash(dir backendsrc)"
+      "Bash(dir backendsrc)",
+      "Bash(git pull origin main)"
     ]
   }
 }

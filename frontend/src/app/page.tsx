@@ -10,7 +10,7 @@ export default function Home() {
   return (
     <div className="flex min-h-screen items-center justify-center bg-gray-50 font-sans">
       <main className="flex min-h-screen w-full max-w-4xl flex-col py-8 px-4 bg-white">
-        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Todo App</h1>
+        <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">Tasks Add Form</h1>
 
         {isAuthenticated && user ? (
           <>

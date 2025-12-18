@@ -5,7 +5,7 @@ from src.models.task_tag import TaskTag
 from src.models.recurrence import RecurrencePattern
 from sqlmodel import SQLModel
 
-# Create all tables
+# Create all tables       
 print("Creating database tables...")
 SQLModel.metadata.create_all(bind=engine)
 print("Database tables created successfully!")
