@@ -1,0 +1,573 @@
+openapi: 3.0.0
+info:
+  title: Task Management API Contracts
+  description: API contracts for frontend enhancement based on backend capabilities
+  version: 1.0.0
+servers:
+  - url: http://localhost:8000/api
+    description: Local development server
+
+paths:
+  /auth/profile:
+    get:
+      summary: Get user profile information
+      description: Retrieve user profile information including id, email, created_at, updated_at, is_active
+      responses:
+        '200':
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthenticationResponse'
+                  status:
+                    type: number
+                    example: 200
+        '401':
+          description: Unauthorized - Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - bearerAuth: []
+
+  /auth/refresh:
+    post:
+      summary: Refresh authentication token
+      description: Refresh the access token using the refresh token
+      responses:
+        '200':
+          description: Token refreshed successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuthenticationResponse'
+                  status:
+                    type: number
+                    example: 200
+        '401':
+          description: Unauthorized - Invalid or expired refresh token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - bearerAuth: []
+
+  /tasks:
+    get:
+      summary: Get tasks with filtering and pagination
+      description: Retrieve tasks with optional filtering by status, priority, due date range, and pagination
+      parameters:
+        - name: status
+          in: query
+          description: Filter by task status
+          required: false
+          schema:
+            type: string
+            enum: [pending, in-progress, completed, cancelled, on_hold]
+        - name: priority
+          in: query
+          description: Filter by task priority
+          required: false
+          schema:
+            type: string
+            enum: [low, medium, high]
+        - name: due_date_from
+          in: query
+          description: Filter tasks with due date after this date (ISO format)
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: due_date_to
+          in: query
+          description: Filter tasks with due date before this date (ISO format)
+          required: false
+          schema:
+            type: string
+            format: date
+        - name: skip
+          in: query
+          description: Number of tasks to skip for pagination
+          required: false
+          schema:
+            type: integer
+            minimum: 0
+            default: 0
+        - name: limit
+          in: query
+          description: Maximum number of tasks to return
+          required: false
+          schema:
+            type: integer
+            minimum: 1
+            maximum: 100
+            default: 10
+      responses:
+        '200':
+          description: Tasks retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TaskListResponse'
+                  status:
+                    type: number
+                    example: 200
+        '401':
+          description: Unauthorized - Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - bearerAuth: []
+    post:
+      summary: Create a new task
+      description: Create a new task with full task properties including status, priority, due date, and recurrence pattern
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                  description: Task title (required, max 255 characters)
+                  maxLength: 255
+                description:
+                  type: string
+                  description: Task description (nullable)
+                  nullable: true
+                status:
+                  $ref: '#/components/schemas/TaskStatus'
+                priority:
+                  $ref: '#/components/schemas/TaskPriority'
+                due_date:
+                  type: string
+                  format: date-time
+                  description: Due date for the task (nullable, ISO string)
+                  nullable: true
+                is_recurring:
+                  type: boolean
+                  description: Whether the task is recurring
+                  default: false
+                recurrence_pattern:
+                  $ref: '#/components/schemas/RecurrencePattern'
+                  nullable: true
+      responses:
+        '201':
+          description: Task created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+                  status:
+                    type: number
+                    example: 201
+        '400':
+          description: Bad request - Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - bearerAuth: []
+
+  /tasks/{id}:
+    get:
+      summary: Get a specific task
+      description: Retrieve a specific task by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+                  status:
+                    type: number
+                    example: 200
+        '401':
+          description: Unauthorized - Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - bearerAuth: []
+    put:
+      summary: Update a task
+      description: Update all properties of a specific task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TaskUpdateRequest'
+      responses:
+        '200':
+          description: Task updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+                  status:
+                    type: number
+                    example: 200
+        '400':
+          description: Bad request - Validation error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '401':
+          description: Unauthorized - Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - bearerAuth: []
+    delete:
+      summary: Delete a task
+      description: Delete a specific task by ID
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      message:
+                        type: string
+                        example: "Task deleted successfully"
+                  status:
+                    type: number
+                    example: 200
+        '401':
+          description: Unauthorized - Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - bearerAuth: []
+
+  /tasks/{id}/toggle-completion:
+    post:
+      summary: Toggle task completion status
+      description: Toggle the completion status of a specific task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Task completion status toggled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Task'
+                  status:
+                    type: number
+                    example: 200
+        '401':
+          description: Unauthorized - Invalid or expired token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Task not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+      security:
+        - bearerAuth: []
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique identifier for the user
+        email:
+          type: string
+          description: User's email address
+        created_at:
+          type: string
+          format: date-time
+          description: Account creation timestamp (ISO string from backend)
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp (ISO string from backend)
+        is_active:
+          type: boolean
+          description: Whether the account is active
+      required:
+        - id
+        - email
+        - created_at
+        - updated_at
+        - is_active
+
+    TaskStatus:
+      type: string
+      enum: [pending, in-progress, completed, cancelled, on_hold]
+      description: Task status values
+
+    TaskPriority:
+      type: string
+      enum: [low, medium, high]
+      description: Task priority level
+
+    RecurrencePattern:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique identifier for the pattern
+        pattern_type:
+          type: string
+          description: Type of recurrence (daily, weekly, monthly, yearly)
+        interval:
+          type: number
+          description: Interval between occurrences
+          minimum: 1
+        end_condition_type:
+          type: string
+          description: How the recurrence ends (count, date, never)
+        end_count:
+          type: number
+          description: Number of occurrences before ending (nullable)
+          nullable: true
+        end_date:
+          type: string
+          format: date-time
+          description: Date to end recurrence (nullable)
+          nullable: true
+        user_id:
+          type: number
+          description: Associated user ID
+      required:
+        - pattern_type
+        - interval
+        - end_condition_type
+        - user_id
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: number
+          description: Unique identifier for the task
+        title:
+          type: string
+          description: Task title (required, max 255 characters)
+          maxLength: 255
+        description:
+          type: string
+          description: Task description (nullable)
+          nullable: true
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        due_date:
+          type: string
+          format: date-time
+          description: Due date for the task (nullable, ISO string from backend)
+          nullable: true
+        user_id:
+          type: number
+          description: Associated user ID
+        created_at:
+          type: string
+          format: date-time
+          description: Creation timestamp (ISO string from backend)
+        updated_at:
+          type: string
+          format: date-time
+          description: Last update timestamp (ISO string from backend)
+        completed_at:
+          type: string
+          format: date-time
+          description: Completion timestamp (nullable, ISO string from backend)
+          nullable: true
+        is_recurring:
+          type: boolean
+          description: Whether the task is recurring
+        recurrence_pattern:
+          $ref: '#/components/schemas/RecurrencePattern'
+          nullable: true
+      required:
+        - id
+        - title
+        - status
+        - priority
+        - user_id
+        - created_at
+        - updated_at
+
+    TaskUpdateRequest:
+      type: object
+      properties:
+        title:
+          type: string
+          description: Task title (required, max 255 characters)
+          maxLength: 255
+        description:
+          type: string
+          description: Task description (nullable)
+          nullable: true
+        status:
+          $ref: '#/components/schemas/TaskStatus'
+        priority:
+          $ref: '#/components/schemas/TaskPriority'
+        due_date:
+          type: string
+          format: date-time
+          description: Due date for the task (nullable, ISO string)
+          nullable: true
+        is_recurring:
+          type: boolean
+          description: Whether the task is recurring
+        recurrence_pattern:
+          $ref: '#/components/schemas/RecurrencePattern'
+          nullable: true
+      required:
+        - title
+
+    AuthenticationResponse:
+      type: object
+      properties:
+        access_token:
+          type: string
+          description: JWT access token
+        token_type:
+          type: string
+          description: Token type (usually "bearer")
+          default: "bearer"
+        refresh_token:
+          type: string
+          description: JWT refresh token
+        user:
+          $ref: '#/components/schemas/User'
+      required:
+        - access_token
+        - token_type
+        - user
+
+    TaskListResponse:
+      type: object
+      properties:
+        tasks:
+          type: array
+          items:
+            $ref: '#/components/schemas/Task'
+        total:
+          type: number
+          description: Total number of tasks matching filters
+      required:
+        - tasks
+        - total
+
+    ErrorResponse:
+      type: object
+      properties:
+        error:
+          type: object
+          properties:
+            code:
+              type: string
+              description: Error code
+            message:
+              type: string
+              description: Error message
+            details:
+              type: string
+              description: Additional error details (optional)
+          required:
+            - code
+            - message

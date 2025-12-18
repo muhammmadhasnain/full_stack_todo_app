@@ -1,0 +1,127 @@
+name: CI/CD Pipeline - Frontend-Backend Consistency
+
+on:
+  push:
+    branches: [ main, develop, 001-frontend-backend-consistency ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  validate-consistency:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: [3.11]
+        node-version: [18.x]
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+        cache-dependency-path: 'frontend/package-lock.json'
+
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r backend/requirements.txt
+        pip install -r backend/requirements-dev.txt
+
+    - name: Install Node.js dependencies
+      run: |
+        cd frontend
+        npm ci
+
+    - name: Run backend type checks
+      run: |
+        cd backend
+        python -m mypy src/
+
+    - name: Run backend linting
+      run: |
+        cd backend
+        python -m flake8 src/ tests/
+        python -m black --check src/ tests/
+
+    - name: Run frontend type checks
+      run: |
+        cd frontend
+        npm run type-check
+
+    - name: Run frontend linting
+      run: |
+        cd frontend
+        npm run lint
+
+    - name: Validate consistency requirements (FR-001, FR-002, FR-003)
+      run: |
+        cd backend
+        python -m src.utils.validate_consistency
+
+    - name: Run backend tests
+      run: |
+        cd backend
+        python -m pytest tests/unit/ -v
+
+    - name: Run integration tests
+      run: |
+        cd backend
+        python -m pytest tests/integration/ -v
+
+    - name: Run frontend tests
+      run: |
+        cd frontend
+        npm run test
+
+    - name: Run consistency validation tests
+      run: |
+        cd backend
+        python -m pytest tests/ -k "consistency or contract or api" -v
+
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Run security scan on backend
+      run: |
+        cd backend
+        python -m bandit -r src/ -f json -o bandit-report.json || true
+
+    - name: Run security scan on frontend
+      run: |
+        cd frontend
+        npm audit --audit-level moderate
+
+  build-and-deploy:
+    needs: validate-consistency
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Docker Buildx
+      uses: docker/setup-buildx-action@v3
+
+    - name: Build backend image
+      run: |
+        cd backend
+        docker build -t todo-backend:latest .
+
+    - name: Build frontend image
+      run: |
+        cd frontend
+        docker build -t todo-frontend:latest .
+
+    - name: Run built applications
+      run: |
+        docker-compose up -d --build
