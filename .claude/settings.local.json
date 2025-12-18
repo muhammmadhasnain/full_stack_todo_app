@@ -1,0 +1,26 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(gh pr create --title \"chore: add .gitignore file and project constitution\" --body \"## Summary\n\nThis PR adds:\n- A comprehensive .gitignore file for the full-stack Next.js/FastAPI project\n- Initial project constitution with core principles for development\n- Claude Code agent configuration files with proper formatting\n- Prompt History Records for constitution creation\n\n## Files Changed\n\n- .gitignore: Comprehensive ignore patterns for frontend, backend, and system files\n- .specify/memory/constitution.md: Project constitution with development principles\n- .claude/agents/*: Claude Code agent configuration files with proper YAML headers\n- history/prompts/*: Prompt History Records\n\n## Test Plan\n\n- [ ] Verify .gitignore properly excludes sensitive files\n- [ ] Confirm constitution aligns with project requirements\n- [ ] Ensure all necessary files are tracked by Git\n\n🤖 Generated with [Claude Code](https://claude.com/claude-code)\" --base main)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh --json --require-tasks --include-tasks)",
+      "Bash(mkdir frontend)",
+      "Bash(printf \"n\\nn\\n\")",
+      "Bash(npx create-next-app@latest . --typescript --eslint --tailwind --app)",
+      "Bash(.specify/scripts/bash/check-prerequisites.sh --json --paths-only)",
+      "SlashCommand(/sp.analyze   @specs\\001-backend-spec\\spec.md)",
+      "Bash(pip install -r requirements.txt)",
+      "Bash(pip install -r requirements-dev.txt)",
+      "Bash(python -m pytest tests/unit/test_models.py -v)",
+      "Bash(python -m pytest tests/unit/ -v)",
+      "Bash(python -m pytest tests/integration/test_auth_api.py::test_register_user_success -v)",
+      "Bash(.specify/scripts/bash/create-phr.sh --title \"Frontend Enhancement Spec\" --stage spec --feature \"frontend-enhancement\" --json)",
+      "Bash(dir backend)",
+      "Bash(dir backend/src/api)",
+      "Bash(dir frontend/src/components)",
+      "Bash(mkdir -p frontend/src/components frontend/src/types frontend/src/lib frontend/src/contexts frontend/src/app)",
+      "Bash(python -m src.utils.validate_consistency)",
+      "Bash(python -m pytest ../tests/e2e/test_consistency_e2e.py::test_sc_001_no_type_conversion_errors -v)",
+      "Bash(dir backendsrc)"
+    ]
+  }
+}
