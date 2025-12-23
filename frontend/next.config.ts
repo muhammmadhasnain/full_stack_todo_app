@@ -1,13 +1,14 @@
 import type { NextConfig } from "next";
-import path from "path";
 
 const nextConfig: NextConfig = {
   output: 'export',
 
-  webpack: (config) => {
-    config.resolve.alias['@'] = path.resolve(__dirname, 'src');
-    return config;
-  },
+  // Remove manual webpack alias as Next.js handles @/* paths automatically
+  // when configured in tsconfig.json
+  // webpack: (config) => {
+  //   config.resolve.alias['@'] = path.resolve(__dirname, 'src');
+  //   return config;
+  // },
 
   turbopack: {}, // Ye line add karo, empty object Turbopack ko satisfy karega
 };
