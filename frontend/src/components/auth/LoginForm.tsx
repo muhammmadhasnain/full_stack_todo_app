@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useAuth } from '@/contexts/auth';
-import { validateLoginForm } from '@/lib/validation';
+import { validateLoginForm } from '../../lib/validation';
 import Input from '../ui/Input';
 import Button from '../ui/Button';
 import FormError from '../ui/FormError';

@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
 import { Task, TaskFilter, CreateTaskRequest, UpdateTaskRequest } from '@/types/task';
-import { taskService } from '@/lib/api';
+import { taskService } from '../lib/api';
 import { useAuth } from './auth';
 
 interface TaskContextType {

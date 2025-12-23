@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { taskService } from '@/lib/api';
+import { taskService } from '../lib/api';
 import { User, TokenResponse } from '@/types/task';
 
 interface AuthContextType {
