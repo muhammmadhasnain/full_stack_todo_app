@@ -1,7 +1,6 @@
 'use client';
 
 import TaskInput from '@/components/TaskInput';
-
 import TaskList from '@/components/TaskList';
 import { useAuth } from '@/contexts/auth';
 
@@ -9,18 +8,15 @@ const TasksPage: React.FC = () => {
   const { user, isAuthenticated } = useAuth();
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 font-sans">
-      <main className="flex min-h-screen w-full max-w-4xl flex-col py-8 px-4 bg-white">
+    <div className="min-h-screen bg-gray-50 font-sans">
+      <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <h1 className="text-2xl font-bold text-center text-gray-800 mb-6">My Tasks</h1>
 
         {isAuthenticated && user ? (
-          <>
-
-            
-           
-            <TaskList /> 
-           
-          </>
+          <div className="space-y-6">
+            <TaskInput />
+            <TaskList />
+          </div>
         ) : (
           <div className="text-center py-8">
             <p className="text-gray-600">Please login to manage your tasks.</p>

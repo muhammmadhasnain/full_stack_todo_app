@@ -6,6 +6,7 @@ import { useAuth } from '@/contexts/auth';
 import { useTask } from '@/contexts/task';
 import { useToast } from '@/contexts/toast';
 import RecurrencePatternForm from './RecurrencePatternForm';
+import { div } from 'framer-motion/m';
 
 interface TaskItemProps {
   task: Task;
@@ -110,19 +111,19 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
   return (
     <div className={`border rounded-lg p-4 mb-3 shadow-sm ${task.completed ? 'bg-gray-50' : 'bg-white'}`}>
       {isEditing ? (
-        <div className="space-y-3">
+        <div className="space-y-4">
           <input
             type="text"
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-lg font-medium"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500 text-lg font-medium"
             required
           />
 
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
-            className="w-full px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
             rows={2}
           />
 
@@ -131,15 +132,15 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
             value={tags}
             onChange={(e) => setTags(e.target.value)}
             placeholder="Enter tags (comma-separated)"
-            className="w-full px-3 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
           />
 
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               <select
                 value={priority}
                 onChange={(e) => setPriority(e.target.value as 'low' | 'medium' | 'high')}
-                className="px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="low">Low</option>
                 <option value="medium">Medium</option>
@@ -149,7 +150,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
               <select
                 value={status}
                 onChange={(e) => setStatus(e.target.value as 'pending' | 'in-progress' | 'completed' | 'cancelled' | 'on_hold')}
-                className="px-2 py-1 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
+                className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-primary-500 focus:border-primary-500"
               >
                 <option value="pending">Pending</option>
                 <option value="in-progress">In Progress</option>
@@ -157,11 +158,13 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
                 <option value="cancelled">Cancelled</option>
                 <option value="on_hold">On Hold</option>
               </select>
+            </div>
 
+            <div className="flex flex-col sm:flex-row sm:space-x-2 space-y-2 sm:space-y-0">
               <button
                 onClick={handleSaveEdit}
                 disabled={loading}
-                className="px-3 py-1 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50"
+                className="px-4 py-2 bg-green-600 text-white rounded-md hover:bg-green-700 disabled:opacity-50 flex-1"
               >
                 Save
               </button>
@@ -169,7 +172,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
               <button
                 onClick={handleCancelEdit}
                 disabled={loading}
-                className="px-3 py-1 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:opacity-50"
+                className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 disabled:opacity-50 flex-1"
               >
                 Cancel
               </button>
@@ -183,17 +186,16 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
         </div>
       ) : (
         <>
-          <div className="flex items-start justify-between">
-            <div className="flex items-start space-x-3 flex-1">
-              <input
-                type="checkbox"
-                checked={task.completed}
-                onChange={handleToggleComplete}
-                disabled={loading}
-                className="mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500"
-              />
+          <div className="flex flex-col sm:flex-row sm:items-start gap-3">
+            <input
+              type="checkbox"
+              checked={task.completed}
+              onChange={handleToggleComplete}
+              disabled={loading}
+              className="mt-1 h-5 w-5 rounded border-gray-300 text-blue-600 focus:ring-blue-500 self-start"
+            />
 
-              <div className="flex-1">
+            <div className="flex-1 min-w-0">
                 <h3 className={`font-medium ${task.completed ? 'line-through text-gray-500' : 'text-gray-900'}`}>
                   {task.title}
                 </h3>
@@ -247,7 +249,7 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
               </div>
             </div>
 
-            <div className="flex space-x-1 ml-2">
+            <div className="flex space-x-1 self-start">
               <button
                 onClick={() => setIsEditing(true)}
                 disabled={loading}
@@ -268,11 +270,11 @@ const TaskItem: React.FC<TaskItemProps> = ({ task }) => {
                 <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                   <path fillRule="evenodd" d="M9 2a1 1 0 00-.894.553L7.382 4H4a1 1 0 000 2v10a2 2 0 002 2h8a2 2 0 002-2V6a1 1 0 100-2h-3.382l-.724-1.447A1 1 0 0011 2H9zM7 8a1 1 0 012 0v6a1 1 0 11-2 0V8zm5-1a1 1 0 00-1 1v6a1 1 0 102 0V8a1 1 0 00-1-1z" clipRule="evenodd" />
                 </svg>
-          
+
               </button>
             </div>
-          </div>
         </>
+    
       )}
     </div>
   );
