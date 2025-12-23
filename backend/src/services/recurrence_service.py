@@ -1,10 +1,4 @@
 
-
-
-
-
-
-
 from sqlmodel import Session, select
 from typing import List, Optional
 from datetime import datetime, date, timedelta

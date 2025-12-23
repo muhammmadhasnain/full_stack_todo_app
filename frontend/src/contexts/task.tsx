@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, ReactNode, useEffect } from 'react';
-import { Task, TaskFilter } from '@/types/task';
+import { Task, TaskFilter, CreateTaskRequest, UpdateTaskRequest } from '@/types/task';
 import { taskService } from '@/lib/api';
 import { useAuth } from './auth';
 
@@ -59,7 +59,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
       tags: taskData.tags,
       dueDate: taskData.dueDate,
       completed: false,
-      completedAt: null,
+      completedAt: undefined,
       recurrencePattern: taskData.recurrencePattern,
       userId: user.id,
       createdAt: new Date().toISOString(),
@@ -133,7 +133,7 @@ export const TaskProvider: React.FC<TaskProviderProps> = ({ children }) => {
         ? {
             ...task,
             completed,
-            completedAt: completed ? new Date().toISOString() : null,
+            completedAt: completed ? new Date().toISOString() : undefined,
             updatedAt: new Date().toISOString()
           }
         : task

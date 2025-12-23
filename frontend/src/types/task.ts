@@ -48,6 +48,8 @@ export interface UpdateTaskRequest {
 export interface TaskFilter {
   status?: 'pending' | 'in-progress' | 'completed' | 'cancelled' | 'on_hold';
   priority?: 'low' | 'medium' | 'high';
+  tags?: string;
+  has_recurrence?: boolean;
   due_date_start?: string;
   due_date_end?: string;
   completed?: boolean;
