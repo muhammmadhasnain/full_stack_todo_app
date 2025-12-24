@@ -1,16 +1,19 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
-  output: 'export',
+  // Remove output: 'export' for Vercel deployment to allow dynamic features
+  // For static export, we would use output: 'export', but Vercel works better with dynamic apps
 
-  // Remove manual webpack alias as Next.js handles @/* paths automatically
-  // when configured in tsconfig.json
-  // webpack: (config) => {
-  //   config.resolve.alias['@'] = path.resolve(__dirname, 'src');
-  //   return config;
+  // Optional: Add any specific Vercel configurations here
+  // For example, if you need to connect to your backend API:
+  // async rewrites() {
+  //   return [
+  //     {
+  //       source: '/api/:path*',
+  //       destination: process.env.BACKEND_URL ? `${process.env.BACKEND_URL}/:path*` : 'http://localhost:8000/:path*',
+  //     },
+  //   ]
   // },
-
-  turbopack: {}, // Ye line add karo, empty object Turbopack ko satisfy karega
 };
 
 export default nextConfig;
