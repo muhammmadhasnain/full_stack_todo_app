@@ -1,0 +1,155 @@
+# API Contract: Task ID Type Consistency
+
+## Base Path
+`/api/{user_id}/tasks`
+
+## Authentication
+All endpoints require JWT authentication in the Authorization header:
+`Authorization: Bearer {jwt_token}`
+
+## Endpoints
+
+### GET /api/{user_id}/tasks
+**Description**: List all tasks for a user
+**Path Parameters**:
+- `user_id`: UUID - The user's unique identifier
+**Response**: 200 OK
+```json
+[
+  {
+    "id": "550e8400-e29b-41d4-a716-446655440000",
+    "title": "Sample task",
+    "description": "Task description",
+    "completed": false,
+    "user_id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+    "created_at": "2025-12-16T10:00:00Z",
+    "updated_at": "2025-12-16T10:00:00Z"
+  }
+]
+```
+
+### POST /api/{user_id}/tasks
+**Description**: Create a new task
+**Path Parameters**:
+- `user_id`: UUID - The user's unique identifier
+**Request Body**:
+```json
+{
+  "title": "New task",
+  "description": "Task description",
+  "completed": false
+}
+```
+**Response**: 201 Created
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "New task",
+  "description": "Task description",
+  "completed": false,
+  "user_id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+  "created_at": "2025-12-16T10:00:00Z",
+  "updated_at": "2025-12-16T10:00:00Z"
+}
+```
+
+### GET /api/{user_id}/tasks/{task_id}
+**Description**: Get task details
+**Path Parameters**:
+- `user_id`: UUID - The user's unique identifier
+- `task_id`: UUID - The task's unique identifier
+**Response**: 200 OK
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "Sample task",
+  "description": "Task description",
+  "completed": false,
+  "user_id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+  "created_at": "2025-12-16T10:00:00Z",
+  "updated_at": "2025-12-16T10:00:00Z"
+}
+```
+
+### PUT /api/{user_id}/tasks/{task_id}
+**Description**: Update a task
+**Path Parameters**:
+- `user_id`: UUID - The user's unique identifier
+- `task_id`: UUID - The task's unique identifier
+**Request Body**:
+```json
+{
+  "title": "Updated task",
+  "description": "Updated description",
+  "completed": true
+}
+```
+**Response**: 200 OK
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "title": "Updated task",
+  "description": "Updated description",
+  "completed": true,
+  "user_id": "6ba7b810-9dad-11d1-80b4-00c04fd430c8",
+  "created_at": "2025-12-16T10:00:00Z",
+  "updated_at": "2025-12-16T10:00:00Z"
+}
+```
+
+### DELETE /api/{user_id}/tasks/{task_id}
+**Description**: Delete a task
+**Path Parameters**:
+- `user_id`: UUID - The user's unique identifier
+- `task_id`: UUID - The task's unique identifier
+**Response**: 204 No Content
+
+### PATCH /api/{user_id}/tasks/{task_id}/complete
+**Description**: Toggle completion status
+**Path Parameters**:
+- `user_id`: UUID - The user's unique identifier
+- `task_id`: UUID - The task's unique identifier
+**Response**: 200 OK
+```json
+{
+  "id": "550e8400-e29b-41d4-a716-446655440000",
+  "completed": true
+}
+```
+
+## Error Responses
+
+### 400 Bad Request
+```json
+{
+  "detail": "Invalid UUID format in path parameter"
+}
+```
+
+### 401 Unauthorized
+```json
+{
+  "detail": "Authentication required"
+}
+```
+
+### 403 Forbidden
+```json
+{
+  "detail": "Access denied to this resource"
+}
+```
+
+### 404 Not Found
+```json
+{
+  "detail": "Task not found"
+}
+```
+
+### 500 Internal Server Error
+```json
+{
+  "detail": "An unexpected error occurred"
+}
+```

@@ -1,0 +1,13 @@
+fastapi
+uvicorn[standard]
+sqlmodel
+psycopg2-binary
+python-jose[cryptography]
+passlib[bcrypt]
+python-dotenv
+
+# Optional / Helpful
+fastapi-mail
+alembic
+pytest
+httpx==0.27.0
